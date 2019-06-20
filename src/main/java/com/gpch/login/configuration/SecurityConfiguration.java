@@ -26,15 +26,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${spring.queries.students-query}")
     private String studentsQuery;
 
-    @Value("${spring.queries.roles-query}")
-    private String rolesQuery;
+    @Value("${spring.queries.teachers-query}")
+    private String teachersQuery;
+
+    @Value("${spring.queries.st_roles-query}")
+    private String rolesStudentsQuery;
+
+    @Value("${spring.queries.t_roles-query}")
+    private String rolesTeachersQuery;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(studentsQuery)
-                .authoritiesByUsernameQuery(rolesQuery)
+                .usersByUsernameQuery(teachersQuery)
+                .authoritiesByUsernameQuery(rolesStudentsQuery)
+                .authoritiesByUsernameQuery(rolesTeachersQuery)
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
@@ -47,10 +55,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
-                .antMatchers("/admin/**").hasAuthority("STUDENT").anyRequest()
+                .antMatchers("/student/**").hasAuthority("STUDENT").anyRequest()
+                //.antMatchers("/teacher/**").hasAuthority("TEACHER").anyRequest()
                 .authenticated().and().csrf().disable().formLogin()
                 .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/admin/home")
+                .defaultSuccessUrl("/student/homeStudent")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .and().logout()

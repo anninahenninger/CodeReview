@@ -3,7 +3,9 @@ package com.gpch.login.controller;
 import javax.validation.Valid;
 
 import com.gpch.login.model.Student;
+import com.gpch.login.model.Teacher;
 import com.gpch.login.service.StudentService;
+import com.gpch.login.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ public class LoginController {
 
     @Autowired
     private StudentService studentService;
+    private TeacherService teacherService;
 
     @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
     public ModelAndView login(){
@@ -56,14 +59,25 @@ public class LoginController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/admin/home", method = RequestMethod.GET)
-    public ModelAndView home(){
+    @RequestMapping(value="/student/homeStudent", method = RequestMethod.GET)
+    public ModelAndView homeStudent(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student student = studentService.findStudentByEmail(auth.getName());
         modelAndView.addObject("studentName", "Welcome " + student.getName() + " " + student.getLastName() + " (" + student.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("admin/home");
+        modelAndView.addObject("studentMessage","Content Available Only for students");
+        modelAndView.setViewName("student/homeStudent");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/teacher/homeTeacher", method = RequestMethod.GET)
+    public ModelAndView homeTeacher(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Teacher teacher = teacherService.findTeacherByEmail(auth.getName());
+        modelAndView.addObject("teacherName", "Welcome " + teacher.getName() + " " + teacher.getLastName() + " (" + teacher.getEmail() + ")");
+        modelAndView.addObject("teacherMessage","Content Available Only for teachers");
+        modelAndView.setViewName("teacher/homeTeacher");
         return modelAndView;
     }
 
