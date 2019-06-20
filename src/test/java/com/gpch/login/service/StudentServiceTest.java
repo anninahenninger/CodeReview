@@ -1,8 +1,8 @@
 package com.gpch.login.service;
 
-import com.gpch.login.model.User;
+import com.gpch.login.model.Student;
 import com.gpch.login.repository.RoleRepository;
-import com.gpch.login.repository.UserRepository;
+import com.gpch.login.repository.StudentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,35 +14,35 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class UserServiceTest {
+public class StudentServiceTest {
 
     @Mock
-    private UserRepository mockUserRepository;
+    private StudentRepository mockStudentRepository;
     @Mock
     private RoleRepository mockRoleRepository;
     @Mock
     private BCryptPasswordEncoder mockBCryptPasswordEncoder;
 
-    private UserService userServiceUnderTest;
-    private User user;
+    private StudentService studentServiceUnderTest;
+    private Student student;
 
     @Before
     public void setUp() {
         initMocks(this);
-        userServiceUnderTest = new UserService(mockUserRepository,
+        studentServiceUnderTest = new StudentService(mockStudentRepository,
                 mockRoleRepository,
                 mockBCryptPasswordEncoder);
-        user = User.builder()
+        student = Student.builder()
                 .id(1)
                 .name("Max")
                 .lastName("Mustermann")
                 .email("test@test.com")
                 .build();
 
-        Mockito.when(mockUserRepository.save(any()))
-                .thenReturn(user);
-        Mockito.when(mockUserRepository.findByEmail(anyString()))
-                .thenReturn(user);
+        Mockito.when(mockStudentRepository.save(any()))
+                .thenReturn(student);
+        Mockito.when(mockStudentRepository.findByEmail(anyString()))
+                .thenReturn(student);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class UserServiceTest {
         final String email = "test@test.com";
 
         // Run the test
-        final User result = userServiceUnderTest.findUserByEmail(email);
+        final Student result = studentServiceUnderTest.findStudentByEmail(email);
 
         // Verify the results
         assertEquals(email, result.getEmail());
@@ -63,7 +63,7 @@ public class UserServiceTest {
         final String email = "test@test.com";
 
         // Run the test
-        User result = userServiceUnderTest.saveUser(User.builder().build());
+        Student result = studentServiceUnderTest.saveStudent(Student.builder().build());
 
         // Verify the results
         assertEquals(email, result.getEmail());
