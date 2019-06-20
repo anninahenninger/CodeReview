@@ -48,6 +48,7 @@ public class Student {
 
     @Column(name = "active")
     private int active;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "student_role", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;

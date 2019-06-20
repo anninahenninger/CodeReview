@@ -34,7 +34,7 @@ public class StudentService {
     public Student saveStudent(Student student) {
         student.setPassword(bCryptPasswordEncoder.encode(student.getPassword()));
         student.setActive(1);
-        Role studentRole = roleRepository.findByRole("ADMIN");
+        Role studentRole = roleRepository.findByRole("STUDENT");
         student.setRoles(new HashSet<Role>(Arrays.asList(studentRole)));
         return studentRepository.save(student);
     }

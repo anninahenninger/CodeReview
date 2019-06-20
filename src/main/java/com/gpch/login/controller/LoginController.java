@@ -52,7 +52,6 @@ public class LoginController {
             modelAndView.addObject("successMessage", "Student has been registered successfully");
             modelAndView.addObject("Student", new Student());
             modelAndView.setViewName("registration");
-
         }
         return modelAndView;
     }
