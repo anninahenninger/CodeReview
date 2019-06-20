@@ -24,9 +24,9 @@ public class Student {
     @Column(name = "student_id")
     private int id;
 
-    @Column(name = "user_name")
-    //@Email(message = "*Please provide a valid Email")
-    @NotEmpty(message = "*Please provide an User Name")
+    @Column(name = "email")
+    @Email(message = "*Please provide a valid Email")
+    @NotEmpty(message = "*Please provide an eMail")
     private String email;
 
     @Column(name = "password")
