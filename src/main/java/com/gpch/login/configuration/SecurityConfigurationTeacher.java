@@ -16,8 +16,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@Order(2)
+public class SecurityConfigurationTeacher extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -25,77 +25,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Value("${spring.queries.students-query}")
-    private String studentsQuery;
-
-    @Value("${spring.queries.st_roles-query}")
-    private String rolesStudentsQuery;
-
-    /*@Value("${spring.queries.teachers-query}")
+    @Value("${spring.queries.teachers-query}")
     private String teachersQuery;
 
     @Value("${spring.queries.t_roles-query}")
     private String rolesTeachersQuery;
-*/
+
     @Override
-    @Order(1)
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.
-                jdbcAuthentication()
-                    .usersByUsernameQuery(studentsQuery)
-                    .authoritiesByUsernameQuery(rolesStudentsQuery)
-                    .dataSource(dataSource)
-                    .passwordEncoder(bCryptPasswordEncoder);
-    }
-/*
     @Order(2)
-    protected void configureTeacher(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(teachersQuery)
                 .authoritiesByUsernameQuery(rolesTeachersQuery)
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
-    }*/
+    }
 
     @Override
-    @Order(1)
+    @Order(2)
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.
-                authorizeRequests()
-                    .antMatchers("/").permitAll()
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/registration").permitAll()
-                    .antMatchers("/student/**").hasAuthority("STUDENT").anyRequest()
-                    .authenticated()
-                /*.and()
-                .authorizeRequests()
-                    .antMatchers("/").permitAll()
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/registrationTeacher").permitAll()
-                    .antMatchers("/teacher/**").hasAuthority("TEACHER").anyRequest()
-                    .authenticated()
-                */.and()
-                    .csrf().disable().formLogin()
-                    .loginPage("/login").failureUrl("/login?error=true")
-                    .defaultSuccessUrl("/student/homeStudent")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                /*.and()
-                    .csrf().disable().formLogin()
-                    .loginPage("/login").failureUrl("/login?error=true")
-                    .defaultSuccessUrl("/teacher/homeTeacher")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                */.and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
-    }
-    /*@Order(2)
-    protected void configureTeacher(HttpSecurity http) throws Exception {
 
         http.
                 authorizeRequests()
@@ -113,9 +62,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/").and().exceptionHandling()
                 .accessDeniedPage("/access-denied");
     }
-*/
+
     @Override
-    @Order(1)
+    @Order(2)
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()

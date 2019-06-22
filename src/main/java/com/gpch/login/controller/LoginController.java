@@ -20,6 +20,8 @@ public class LoginController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
     private TeacherService teacherService;
 
     @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
@@ -39,6 +41,15 @@ public class LoginController {
         return modelAndView;
     }
 
+    @RequestMapping(value="/registrationTeacher", method = RequestMethod.GET)
+    public ModelAndView registrationTeacher(){
+        ModelAndView modelAndView = new ModelAndView();
+        Teacher teacher = new Teacher();
+        modelAndView.addObject("teacher", teacher);
+        modelAndView.setViewName("registrationTeacher");
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView createNewUser(@Valid Student student, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
@@ -55,6 +66,26 @@ public class LoginController {
             modelAndView.addObject("successMessage", "Student has been registered successfully");
             modelAndView.addObject("Student", new Student());
             modelAndView.setViewName("registration");
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/registrationTeacher", method = RequestMethod.POST)
+    public ModelAndView createNewUser(@Valid Teacher teacher, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        Teacher teacherExists = teacherService.findTeacherByEmail(teacher.getEmail());
+        if (teacherExists != null) {
+            bindingResult
+                    .rejectValue("email", "error.teacher",
+                            "There is already a teacher registered with the email provided");
+        }
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("registrationTeacher");
+        } else {
+            teacherService.saveTeacher(teacher);
+            modelAndView.addObject("successMessage", "Teacher has been registered successfully");
+            modelAndView.addObject("Teacher", new Teacher());
+            modelAndView.setViewName("registrationTeacher");
         }
         return modelAndView;
     }
