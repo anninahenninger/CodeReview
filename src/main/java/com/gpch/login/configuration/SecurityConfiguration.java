@@ -31,12 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${spring.queries.st_roles-query}")
     private String rolesStudentsQuery;
 
-    /*@Value("${spring.queries.teachers-query}")
+    @Value("${spring.queries.teachers-query}")
     private String teachersQuery;
 
     @Value("${spring.queries.t_roles-query}")
     private String rolesTeachersQuery;
-*/
+
     @Override
     @Order(1)
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -67,8 +67,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/").permitAll()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/registration").permitAll()
+                    .antMatchers("/registrationTeacher").permitAll()
                     .antMatchers("/student/**").hasAuthority("STUDENT").anyRequest()
                     .authenticated()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/teacher/**").hasAuthority("TEACHER").anyRequest()
+                .authenticated()
                 /*.and()
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
